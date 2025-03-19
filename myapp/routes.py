@@ -50,20 +50,10 @@ def registration():
         password = registration_form.password.data
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-        existing_username = db.session.execute(db.select(User).where(User.username == username)).scalar()
-        existing_email = db.session.execute(db.select(User).where(User.email == email)).scalar()
-
-        if existing_username:
-            flash("Username is already taken. Please choose a different one.", "danger")
-            return render_template("registration.html", form=registration_form)
-
-        elif existing_email:
-            flash("Email is already taken. Please choose a different one.", "danger")
-            return render_template("registration.html", form=registration_form)
-
         new_user = User(username=username, email=email, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
+        
         flash(f"Account created successfully for {username}! You can now login", category="success")
         return redirect(url_for('login'))
 

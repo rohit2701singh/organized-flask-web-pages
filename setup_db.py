@@ -8,6 +8,6 @@ with app.app_context():
     
 
 # After running setup_db.py once and creating the database and tables, you do not need to run it again 
-# unless you delete the database or make changes to the database structure (e.g., adding new tables).
+# unless you delete the database or make changes to the database structure (e.g., adding new tables or adding custom validators).
 
 # bash command run: python setup_db.py
