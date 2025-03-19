@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content%}
+<div class="d-flex justify-content-center align-items-center vh-100 my-5">
+    <div class="container">
+
+        <div class="row justify-content-center mb-3">
+            <div class="col-md-12">
+                <form class="d-flex" action="{{url_for('home')}}" method="post">
+                    <input type="text" class="form-control me-2 col-md-4 mr-3 ml-5" name="team_name"
+                           placeholder="enter team name to get schedule (ex: CSK)">
+                    <input type="text" class="form-control me-2 col-md-4" name="venue_city_name"
+                           placeholder="enter venue city to get all matches (ex: Chennai)">
+                    <button type="submit" class="btn btn-primary ml-3 col-md-2">Search</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+
+                <table class="table table-bordered text-center">
+                    <thead class="thead-light text-center">
+                    <tr>
+                        <th scope="col">Match Number</th>
+                        <th scope="col">Match Date</th>
+                        <th scope="col">Match Time</th>
+                        <th scope="col">Team 1</th>
+                        <th scope="col">Team 2</th>
+                        <th scope="col">Venue Ground</th>
+                        <th scope="col">Venue City</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for data in full_data %}
+                    <tr>
+                        <th scope="row">{{ data["match number"] }}</th>
+                        <td>{{ data["match date"] }}</td>
+                        <td>{{ data["match time"] }}</td>
+                        <td>{{ data["team 1"] }}</td>
+                        <td>{{ data["team 2"] }}</td>
+                        <td>{{ data["venue ground"] }}</td>
+                        <td>{{ data["venue city"] }}</td>
+                    </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

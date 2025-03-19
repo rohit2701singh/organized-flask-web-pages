@@ -1,0 +1,67 @@
+{% extends 'base.html'%}
+
+{% block style %}
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content%}
+
+    <div class="mt-5 d-flex justify-content-center align-items-center vh-100">
+        <div class="form-container">
+            <h2 class="mb-5 heading">User Login</h2>
+
+            <form method="POST" action="" novalidate>
+                {{ form.hidden_tag() }}
+
+                <!-- Email input -->
+                <div class="form-outline mb-4">
+                    {{ form.email.label }}
+                    {% if form.email.errors %}
+                        {% for error in form.email.errors %}
+                            <span class="text-danger"> *{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                    {{ form.email(class="form-control") }}
+                </div>
+
+                <!-- Password input -->
+                <div class="form-outline mb-4">
+                    {{ form.password.label }}
+                    {% if form.password.errors %}
+                        {% for error in form.password.errors %}
+                            <span class="text-danger"> *{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                    {{ form.password(class="form-control") }}
+                </div>
+
+                <!-- 2 column grid layout for inline styling -->
+                <div class="row mb-4">
+                    <div class="col d-flex justify-content-start align-items-center">
+                        <!-- Remember me checkbox -->
+                        <div class="form-check">
+                            {{ form.remember(class="form-check-input") }}
+                            {{ form.remember.label(class="form-check-label") }}
+                        </div>
+                    </div>
+                    <div class="col forgot-password text-end">
+                        <!-- Forgot password link -->
+                        <a href="#!">Forgot password?</a>
+                    </div>
+                </div>
+
+                <!-- Submit button -->
+                <div class="form-outline mb-4 ">
+                    {{ form.submit(class="btn btn-primary btn-block mb-4") }}
+                </div>
+
+                <!-- Register buttons -->
+                <div class="text-center">
+                    <p>Not a member? <a href="{{url_for('registration')}}">Register</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+{% endblock %}
