@@ -1,0 +1,100 @@
+{% extends 'base.html'%} {% block style %}
+<link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+{% endblock %} {% block content%}
+
+<div class="container justify-content-center align-items-center mt-3 py-5">
+    <section class="py-4" style="background-color: #eee">
+        <div class="container px-5">
+            <div class="row">
+                <div class="col">
+                    <nav aria-label="breadcrumb" class="bg-body-tertiary rounded-3 p-3 mb-2">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item active" aria-current="page">
+                                <b>User Account Info</b>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-body text-center">
+                            <img src="{{ image_file }}" alt="avatar" class="rounded-circle img-fluid"
+                                style="width: 160px" />
+                            <h5 class="mt-4">{{ current_user.username }}</h5>
+                            <p class="text-muted mb-1">{{ current_user.email }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <div class="card-body my-4">
+
+                            <form method="POST" action="" novalidate="novalidate" enctype="multipart/form-data" >
+                                {{ form.hidden_tag() }}
+
+                                <div class="row my-3">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0 pl-5">{{ form.username.label }}</p>
+                                    </div>
+                                    
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            {{ form.username(class="form-control") }}
+                                        </p>
+                                        {% if form.username.errors %} 
+                                            {% for error in form.username.errors %}
+                                                <span class="text-danger"> *{{ error }}</span>
+                                            {% endfor %} 
+                                        {% endif %}
+                                    </div>
+
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0 pl-5">{{ form.email.label }}</p>
+                                    </div>
+                                    
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            {{ form.email(class="form-control") }}
+                                        </p>
+                                        {% if form.email.errors %} 
+                                            {% for error in form.email.errors%}
+                                                <span class="text-danger"> *{{ error }}</span>
+                                            {% endfor %} 
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="row  my-4">
+                                    <div class="col-sm-4">
+                                        <p class="mb-0 pl-4">{{ form.picture.label }}</p>
+                                    </div>
+                                    
+                                    <div class="col-sm-8 pl-3">
+                                        {{ form.picture(class="form-control-file") }}
+                                            {% if form.picture.errors %} 
+                                                {% for error in form.picture.errors%}
+                                                    <span class="text-danger"> *{{ error }}</span>
+                                            {% endfor %} 
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="form-outline mb-3 col-md-4 mx-auto text-center">
+                                    {{ form.submit(class="btn btn-outline-primary btn-block mb-4")}}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% endblock %}
