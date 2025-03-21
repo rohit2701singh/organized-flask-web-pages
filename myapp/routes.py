@@ -93,17 +93,21 @@ def login():
 
 def save_picture(form_picture):
     random_hex = secrets.token_hex(nbytes=8)
-    _, f_ext = os.path.splitext(form_picture.filename)
+    _, f_ext = os.path.splitext(form_picture.filename)  # os.path.splitext() splits pathname into a pair (root, extension) ex: desktop/file.py --> (desktop/file, .py)
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
+
+    previous_img_path = os.path.join(app.root_path, 'static/profile_pics', current_user.image_file)
+
+    if current_user.image_file != 'default.jpg' and os.path.isfile(previous_img_path):    # delete users old pic if exist
+        os.remove(previous_img_path)
+
     # form_picture.save(picture_path)
 
     output_size = (160, 160)    # if you don't want large image then resize them
     i = Image.open(form_picture)
     i.thumbnail(output_size)
-
     i.save(picture_path)
-    
 
     return picture_fn
    
@@ -125,13 +129,42 @@ def account():
         flash(message="Your account has been updated!", category='success')
         return redirect(url_for('account'))
     
-    elif request.method == 'GET':
+    elif request.method == 'GET':   # prefilled user details in form
         form.username.data = current_user.username
         form.email.data = current_user.email
-        
-    
-    image_file = url_for('static', filename=f'profile_pics/{current_user.image_file}')
+
+
+    image_file_path = os.path.join(app.root_path, 'static/profile_pics', current_user.image_file)
+
+    if not os.path.isfile(image_file_path):  # check if the user image file exists, otherwise use default image
+        image_file = url_for('static', filename='profile_pics/default.jpg')
+    else:
+        image_file = url_for('static', filename=f'profile_pics/{current_user.image_file}')
+
+
     return render_template('account.html', image_file=image_file, form=form)
+
+
+@app.route('/remove_img', methods=['GET', 'POST'])
+@login_required
+def remove_image():
+
+    if current_user.image_file != 'default.jpg':
+        
+        previous_img_path = os.path.join(app.root_path, 'static/profile_pics', current_user.image_file)
+
+        if os.path.isfile(previous_img_path):
+            os.remove(previous_img_path)    # remove previous image then set it to default
+
+        current_user.image_file = 'default.jpg'
+        db.session.commit()
+
+        flash('Your profile picture has been removed.', 'success')
+    else:
+        flash("Can't remove. Image is already the default one.", 'warning')
+
+    return redirect(url_for('account'))  # Redirect to the profile page or where necessary
+
 
 
 @app.route("/logout")

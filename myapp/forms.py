@@ -7,10 +7,18 @@ from myapp.models import User
 from myapp import db
 
 
+def no_leading_trailing_spaces(form, field):    # (form, field) automatically passed by WTForms
+    if field.data != field.data.strip():
+        raise ValidationError("Field cannot have leading or trailing spaces.")
+
+    if field.name == "password" and " " in field.data:
+        raise ValidationError("Password cannot contain spaces.")
+
+
 class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
+    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20), no_leading_trailing_spaces])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired(), no_leading_trailing_spaces])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
 
@@ -35,10 +43,11 @@ class LoginForm(FlaskForm):
 
 
 class UpdateAccountForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
+    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20), no_leading_trailing_spaces])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    picture = FileField('Update Profile Pic', validators=[FileAllowed(['jpg', 'png'])])
+    picture = FileField('Update Profile Pic', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     submit = SubmitField('Update')
+    remove_img = SubmitField('Remove Image')
 
 
     def validate_username(self, username):   

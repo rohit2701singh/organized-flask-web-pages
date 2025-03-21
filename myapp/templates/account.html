@@ -1,9 +1,11 @@
 {% extends 'base.html'%} {% block style %}
 <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
-{% endblock %} {% block content%}
+{% endblock %} 
 
-<div class="container justify-content-center align-items-center mt-3 py-5">
-    <section class="py-4" style="background-color: #eee">
+{% block content%}
+
+<div class="container justify-content-center align-items-center mt-5">
+    <section class="py-3" style="background-color: #eee">
         <div class="container px-5">
             <div class="row">
                 <div class="col">
@@ -21,11 +23,23 @@
                 <div class="col-lg-4">
                     <div class="card mb-4">
                         <div class="card-body text-center">
-                            <img src="{{ image_file }}" alt="avatar" class="rounded-circle img-fluid"
-                                style="width: 160px" />
-                            <h5 class="mt-4">{{ current_user.username }}</h5>
+
+                            <img src="{{ image_file }}" alt="avatar" class="rounded-circle img-fluid d-block mx-auto border" 
+                                style="width: 160px; height: 190px; object-fit: cover;" />
+                            <h5 class="mt-2">{{ current_user.username }}</h5>
                             <p class="text-muted mb-1">{{ current_user.email }}</p>
+                            
                         </div>
+
+                        <form method="POST" action="{{ url_for('remove_image') }}" novalidate="novalidate">
+                            {{ form.hidden_tag() }}
+                            <div class="d-flex justify-content-center mb-3">
+                                <div class="btn-group">
+                                    {{ form.remove_img(class="btn btn-outline-primary btn-sm") }}
+                                </div>
+                            </div>
+                        </form>
+
                     </div>
                 </div>
                 <div class="col-lg-8">
@@ -59,6 +73,7 @@
                                     </div>
                                     
                                     <div class="col-sm-9">
+
                                         <p class="text-muted mb-0">
                                             {{ form.email(class="form-control") }}
                                         </p>
