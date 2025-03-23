@@ -1,0 +1,60 @@
+{% extends 'base.html'%}
+
+{% block style %}
+    {{ super() }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="{{ url_for('static', filename='css/timeline_post.css') }}" rel="stylesheet" />
+{% endblock style %} 
+
+{% block content %}
+
+<div class="d-flex container justify-content-center">
+    <div class="col-md-8 mt-3">
+        <h1>{{ post.title }}</h1>
+        <p> ( Author: {{ post.author.username }} ) </p>
+        <div class="timeline-header">
+
+        {% if current_user == post.author %}
+            <a href="{{ url_for('update_post', post_id=post.id) }}" class="m-r-15 text-inverse-lighter mr-3">
+            <i class="fa fa-edit fa-fw fa-lg m-r-3"></i> Edit Post</a>
+
+            <a href="" class="m-r-15 text-inverse-lighter" data-toggle="modal" data-target="#deleteModal">
+            <i style="font-size:20px; color:red" class="fa fa-trash fa-fw fa-lg m-r-3"></i> Delete</a>
+        {% endif %}
+
+        </div>
+        <!-- <div class="form-group"> -->
+            
+            {{ post.content }}
+        <!-- </div> -->
+
+    </div>
+</div>
+
+
+<!-- delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+ 
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+ 
+          <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
+             <input type="submit" value="Delete" class="btn btn-danger">
+          </form>
+ 
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+
+
+{% endblock content %}
