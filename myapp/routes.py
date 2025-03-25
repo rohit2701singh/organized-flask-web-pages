@@ -188,8 +188,13 @@ def logout():
 @app.route("/all_post")
 @login_required
 def all_posts():
-    posts = db.session.execute(db.select(Post).order_by(Post.id.desc())).scalars()
+    # posts = db.session.execute(db.select(Post).order_by(Post.id.desc())).scalars()
+    # return render_template('all_posts.html', title='All Post', posts=posts, image_file=show_image_in_web())
 
+    page = request.args.get('page', 1, type=int)  # page number from query params, default page=1
+    per_page = 2  # Number of posts per page
+
+    posts = db.paginate(db.select(Post).order_by(Post.date_posted.desc()), page=page, per_page=per_page, error_out=False)
     return render_template('all_posts.html', title='All Post', posts=posts, image_file=show_image_in_web())
 
 
