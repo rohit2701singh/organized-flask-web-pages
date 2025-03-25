@@ -454,7 +454,7 @@ select.form-control:not([size]):not([multiple]) {
 .timeline .timeline-time .date,
 .timeline .timeline-time .time {
     display: block;
-    font-weight: 600
+    font-weight: 500
 }
 
 .timeline .timeline-time .date {
@@ -464,7 +464,7 @@ select.form-control:not([size]):not([multiple]) {
 
 .timeline .timeline-time .time {
     line-height: 24px;
-    font-size: 20px;
+    font-size: 18px;
     color: #242a30
 }
 

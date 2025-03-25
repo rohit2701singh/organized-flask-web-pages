@@ -1,56 +1,113 @@
 {% extends 'base.html'%}
 
 {% block style %}
-    {{ super() }}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="{{ url_for('static', filename='css/timeline_post.css') }}" rel="stylesheet" />
-{% endblock style %} 
+{{ super() }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="{{ url_for('static', filename='css/timeline_post.css') }}" rel="stylesheet" />
+{% endblock style %}
 
 {% block content %}
 
 <div class="d-flex container justify-content-center">
-    <div class="col-md-8 mt-3">
-        <h1>{{ post.title }}</h1>
-        <p> Author: <a href="{{ url_for('user_posts', username=post.author.username) }}">{{ post.author.username }} </a> </p>
-        <div class="timeline-header">
+  	<div class="col-md-10 mt-3">
+    <!-- Header Section -->
+    	<div class="p-3 rounded d-flex align-items-center" style="background-color: lightgray;">
+      	<!-- Profile Image -->
+      		<img src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" alt="User Image"
+        		class="rounded-circle me-3" style="width: 60px; height: 60px; object-fit: cover;">
 
-        {% if current_user == post.author %}
-            <a href="{{ url_for('update_post', post_id=post.id) }}" class="m-r-15 text-inverse-lighter mr-3">
-            <i class="fa fa-edit fa-fw fa-lg m-r-3"></i> Edit Post</a>
+      		<!-- Title, Author & Action Buttons -->
+      		<div class="container ml-2">
+				<h1 class="mb-1">{{ post.title }}</h1>
+				<p class="mb-2">
+					Author:
+					<a href="{{ url_for('user_posts', username=post.author.username) }}">
+						{{ post.author.username }}
+					</a>
+				</p>
 
-            <a href="" class="m-r-15 text-inverse-lighter" data-toggle="modal" data-target="#deleteModal">
-            <i style="font-size:20px; color:red" class="fa fa-trash fa-fw fa-lg m-r-3"></i> Delete</a>
-        {% endif %}
+				<!-- Action Buttons (Below Username) -->
+				{% if current_user == post.author %}
+				<div class="d-flex">
+					<a href="{{ url_for('update_post', post_id=post.id) }}" class="text-dark me-3">
+						<i class="fa fa-edit fa-fw fa-lg"></i> Edit Post
+					</a>
+					<a href="#" class="text-dark" data-toggle="modal" data-target="#deleteModal">
+						<i class="fa fa-trash fa-fw fa-lg ml-2" style="color:red;"></i> Delete
+					</a>
+				</div>
+				{% endif %}
+      		</div>
+    	</div>
 
-        </div>
-            {{ post.content }}
-    </div>
+    	<div class="mt-4">
+      		{{ post.content }}
+    	</div>
+  	</div>
 </div>
 
 
+
+
+
+
+<!-- <div class="d-flex container justify-content-center">
+  <div class="col-md-9 mt-3">
+
+      <div class="p-3 rounded" style="background-color: lightgray;">
+          <h1 class="mb-1">{{ post.title }}</h1>
+          <p class="mb-3">
+              Author: 
+              <a href="{{ url_for('user_posts', username=post.author.username) }}">
+                  {{ post.author.username }}
+              </a>
+          </p>
+
+          {% if current_user == post.author %}
+          <div class="d-flex">
+              <a href="{{ url_for('update_post', post_id=post.id) }}" class="text-inverse-lighter me-3">
+                  <i class="fa fa-edit fa-fw fa-lg"></i> Edit Post
+              </a>
+
+              <a href="#" class="text-inverse-lighter" data-toggle="modal" data-target="#deleteModal">
+                  <i class="fa fa-trash fa-fw fa-lg" style="font-size:20px; color:red;"></i> Delete
+              </a>
+          </div>
+          {% endif %}
+      </div>
+
+      <div class="mt-4">
+          {{ post.content }}
+      </div>
+  </div>
+</div> -->
+
+
+
 <!-- delete Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
- 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
- 
-          <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
-             <input type="submit" value="Delete" class="btn btn-danger">
-          </form>
- 
-        </div>
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+        <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
+          <input type="submit" value="Delete" class="btn btn-danger">
+        </form>
+
       </div>
     </div>
   </div>
- 
+</div>
+
 
 
 {% endblock content %}

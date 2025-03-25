@@ -1,49 +1,54 @@
-{% extends 'base.html'%}
+{% extends 'base.html'%} 
 
-{% block style %}
-    {{ super() }}
-    <link href="{{ url_for('static', filename='css/timeline_post.css') }}" rel="stylesheet" />
+{% block style %} 
+{{ super() }}
+<link href="{{ url_for('static', filename='css/timeline_post.css') }}" rel="stylesheet" />
 {% endblock %} 
 
 {% block content %}
 
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
 <div class="container mt-3">
    <div class="row">
       <div class="col-md-12">
          <div id="content" class="content content-full-width">
-            <!-- begin profile -->
-            <div class="profile">
-               <div class="profile-header">
-                  <!-- BEGIN profile-header-cover -->
-                  <div class="profile-header-cover"></div>
-                  <!-- END profile-header-cover -->
-                  <!-- BEGIN profile-header-content -->
-                  <div class="profile-header-content">
-                     <!-- BEGIN profile-header-img -->
-                     <div class="profile-header-img">
-                           <img src="{{ image_file }}" alt="image">
 
+            {% if current_user.is_authenticated %}
+               <!-- begin profile -->
+               <div class="profile">
+                  <div class="profile-header">
+                     <!-- BEGIN profile-header-cover -->
+                     <div class="profile-header-cover"></div>
+                     <!-- END profile-header-cover -->
+                     <!-- BEGIN profile-header-content -->
+                     <div class="profile-header-content">
+                        <!-- BEGIN profile-header-img -->
+                        <div class="profile-header-img">
+                           <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" alt="image" />
+                        </div>
+                        <!-- END profile-header-img -->
+                        <!-- BEGIN profile-header-info -->
+                        <div class="profile-header-info">
+                           <h4 class="m-t-10 m-b-5">{{ current_user.username}}</h4>
+                           <a href="{{ url_for('account') }}" class="btn btn-sm btn-info mb-2">Edit Profile</a>
+                        </div>
+                        <!-- END profile-header-info -->
                      </div>
-                     <!-- END profile-header-img -->
-                     <!-- BEGIN profile-header-info -->
-                     <div class="profile-header-info">
-                        <h4 class="m-t-10 m-b-5">{{ current_user.username}}</h4>
-                        <a href="{{ url_for('account') }}" class="btn btn-sm btn-info mb-2">Edit Profile</a>
-                     </div>
-                     <!-- END profile-header-info -->
+                     <!-- END profile-header-content -->
+                     <!-- BEGIN profile-header-tab -->
+                     <ul class="profile-header-tab nav nav-tabs">
+                        <li class="nav-item"><a href="{{ url_for('user_posts', username=current_user.username) }}" class="nav-link_">MY POSTS</a></li>
+                        <li class="nav-item"><a href="" class="nav-link_">ABOUT</a></li>
+                        <li class="nav-item"><a href="" class="nav-link_">PHOTOS</a></li>
+                     </ul>
+                     <!-- END profile-header-tab -->
                   </div>
-                  <!-- END profile-header-content -->
-                  <!-- BEGIN profile-header-tab -->
-                  <ul class="profile-header-tab nav nav-tabs">
-                     <li class="nav-item"><a href="" class="nav-link_">POSTS</a></li>
-                     <li class="nav-item"><a href="" class="nav-link_">ABOUT</a></li>
-                     <li class="nav-item"><a href="" class="nav-link_">PHOTOS</a></li>
-                  </ul>
-                  <!-- END profile-header-tab -->
                </div>
-            </div>
-            <!-- end profile -->
+               <!-- end profile -->
+            {% else %}
+               <h2 class="text-center"><u>All Posts</u></h2>
+            {% endif %}
+
             <!-- begin profile-content -->
             <div class="profile-content">
                <!-- begin tab-content -->
@@ -70,23 +75,27 @@
                            <div class="timeline-body">
                               <div class="timeline-header">
                                  <a href="{{ url_for('user_posts', username=post.author.username) }}">
-                                    <span class="userimage"><img src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" alt="user image"></span>
+                                    <span class="userimage"><img
+                                          src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}"
+                                          alt="user image" /></span>
                                     <span class="username">{{ post.author.username }}</span>
                                  </a>
-                                    
-                                    {% if current_user == post.author %}
 
-                                       <a href="{{ url_for('update_post', post_id=post.id) }}" class="m-r-15 text-inverse-lighter">
-                                          <i class="fa fa-edit fa-fw fa-lg m-r-3 ml-4"></i> Edit Post</a>
+                                 {% if current_user == post.author %}
 
-                                    {% endif %}
+                                    <a href="{{ url_for('update_post', post_id=post.id) }}" class="m-r-15 text-inverse-lighter">
+                                       <i class="fa fa-edit fa-fw fa-lg m-r-3 ml-4"></i> EditPost
+                                    </a>
+
+                                 {% endif %}
 
                                  <span class="pull-right text-muted">18 Views</span>
                               </div>
                               <div class="timeline-content">
-                                 <h5 class="mb-2"><a href="{{ url_for('post_details', post_id=post.id) }}">{{ post.title }}</a></h5> 
-                                    <p> {{ post.content }} </p>
-
+                                 <h5 class="mb-2">
+                                    <a href="{{ url_for('post_details', post_id=post.id) }}">{{ post.title }}</a>
+                                 </h5>
+                                 <p>{{ post.content }}</p>
                               </div>
                               <div class="timeline-likes">
                                  <div class="stats-right">
@@ -95,74 +104,83 @@
                                  </div>
                                  <div class="stats">
                                     <span class="fa-stack fa-fw stats-icon">
-                                    <i class="fa fa-circle fa-stack-2x text-danger"></i>
-                                    <i class="fa fa-heart fa-stack-1x fa-inverse t-plus-1"></i>
+                                       <i class="fa fa-circle fa-stack-2x text-danger"></i>
+                                       <i class="fa fa-heart fa-stack-1x fa-inverse t-plus-1"></i>
                                     </span>
                                     <span class="fa-stack fa-fw stats-icon">
-                                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                                    <i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
+                                       <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                                       <i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
                                     </span>
                                     <span class="stats-total">4.3k</span>
                                  </div>
                               </div>
-                              <div class="timeline-footer">
-                                 <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-thumbs-up fa-fw fa-lg m-r-3"></i> Like</a>
-                                 <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-comments fa-fw fa-lg m-r-3"></i> Comment</a> 
-                                 <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-share fa-fw fa-lg m-r-3"></i> Share</a>
-                              </div>
-                              <div class="timeline-comment-box">
-                                 <div class="user">
-                                    <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" alt="image">
+
+                              {% if current_user.is_authenticated %}
+                                 <div class="timeline-footer">
+                                    <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i
+                                          class="fa fa-thumbs-up fa-fw fa-lg m-r-3"></i>
+                                       Like</a>
+                                    <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i
+                                          class="fa fa-comments fa-fw fa-lg m-r-3"></i>
+                                       Comment</a>
+                                    <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i
+                                          class="fa fa-share fa-fw fa-lg m-r-3"></i> Share</a>
                                  </div>
-                                 <div class="input">
-                                    <form action="">
-                                       <div class="input-group">
-                                          <input type="text" class="form-control rounded-corner" placeholder="Write a comment...">
-                                          <span class="input-group-btn p-l-10">
-                                          <button class="btn btn-primary f-s-12 rounded-corner" type="button">Comment</button>
-                                          </span>
-                                       </div>
-                                    </form>
+
+                                 <div class="timeline-comment-box">
+                                    <div class="user">
+                                       <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" alt="image" />
+                                    </div>
+                                    <div class="input">
+                                       <form action="">
+                                          <div class="input-group">
+                                             <input type="text" class="form-control rounded-corner"
+                                                placeholder="Write a comment..." />
+                                             <span class="input-group-btn p-l-10">
+                                                <button class="btn btn-primary f-s-12 rounded-corner" type="button">
+                                                   Comment
+                                                </button>
+                                             </span>
+                                          </div>
+                                       </form>
+                                    </div>
                                  </div>
-                              </div>
+                              {% endif %}
+
                            </div>
                            <!-- end timeline-body -->
                         </li>
-                        
+
                         {% endfor %}
                      </ul>
-                     <!-- end timeline -->        
+                     <!-- end timeline -->
                   </div>
                   <!-- end #profile-post tab -->
                </div>
                <!-- end tab-content -->
-            
+
                <!-- Pagination Controls -->
-            <div class="container text-center">
+               <div class="container text-center">
 
-               {% for page_num in posts.iter_pages(left_edge=1, left_current=1, right_current=1, right_edge=1) %}
+                  {% for page_num in posts.iter_pages(left_edge=1, left_current=1, right_current=1, right_edge=1) %} 
+                     {% if page_num %} 
+                        {% if page_num == posts.page %}
+                           <a class="btn btn-info btn-md" href="{{ url_for('all_posts', page=page_num) }}">{{ page_num }}</a>
 
-                  {% if page_num  %}
-                     {% if page_num == posts.page %}
-                        <a class="btn btn-info btn-md" href="{{ url_for('all_posts', page=page_num) }}">{{ page_num }}</a>
+                        {% else %}
+                           <a class="btn btn-outline-info btn-sm" href="{{ url_for('all_posts', page=page_num) }}">{{ page_num}}</a>
+                        {% endif %} 
+                     {% else %} 
+                        ..... 
+                     {% endif %} 
+                  {% endfor %}
 
-                     {% else %}
-                        <a class="btn btn-outline-info btn-sm" href="{{ url_for('all_posts', page=page_num) }}">{{ page_num }}</a>
-                     {% endif %}
-                  {% else %}
-                     .....
-                  {% endif %}
-               {% endfor %}
-
-            </div>
-
+               </div>
             </div>
             <!-- end profile-content -->
-
          </div>
       </div>
    </div>
 </div>
-
 
 {% endblock content %}
