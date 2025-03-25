@@ -11,7 +11,7 @@
 <div class="d-flex container justify-content-center">
     <div class="col-md-8 mt-3">
         <h1>{{ post.title }}</h1>
-        <p> ( Author: {{ post.author.username }} ) </p>
+        <p> Author: <a href="{{ url_for('user_posts', username=post.author.username) }}">{{ post.author.username }} </a> </p>
         <div class="timeline-header">
 
         {% if current_user == post.author %}
@@ -23,11 +23,7 @@
         {% endif %}
 
         </div>
-        <!-- <div class="form-group"> -->
-            
             {{ post.content }}
-        <!-- </div> -->
-
     </div>
 </div>
 

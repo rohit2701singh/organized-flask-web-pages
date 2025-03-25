@@ -9,45 +9,14 @@
 
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <div class="container mt-3">
-   <div class="row">
-      <div class="col-md-12">
-         <div id="content" class="content content-full-width">
-            <!-- begin profile -->
-            <div class="profile">
-               <div class="profile-header">
-                  <!-- BEGIN profile-header-cover -->
-                  <div class="profile-header-cover"></div>
-                  <!-- END profile-header-cover -->
-                  <!-- BEGIN profile-header-content -->
-                  <div class="profile-header-content">
-                     <!-- BEGIN profile-header-img -->
-                     <div class="profile-header-img">
-                           <img src="{{ image_file }}" alt="image">
-
-                     </div>
-                     <!-- END profile-header-img -->
-                     <!-- BEGIN profile-header-info -->
-                     <div class="profile-header-info">
-                        <h4 class="m-t-10 m-b-5">{{ current_user.username}}</h4>
-                        <a href="{{ url_for('account') }}" class="btn btn-sm btn-info mb-2">Edit Profile</a>
-                     </div>
-                     <!-- END profile-header-info -->
-                  </div>
-                  <!-- END profile-header-content -->
-                  <!-- BEGIN profile-header-tab -->
-                  <ul class="profile-header-tab nav nav-tabs">
-                     <li class="nav-item"><a href="" class="nav-link_">POSTS</a></li>
-                     <li class="nav-item"><a href="" class="nav-link_">ABOUT</a></li>
-                     <li class="nav-item"><a href="" class="nav-link_">PHOTOS</a></li>
-                  </ul>
-                  <!-- END profile-header-tab -->
-               </div>
-            </div>
-            <!-- end profile -->
+    <div class="row">
+        <div class="col-md-12">
+            <div id="content" class="content content-full-width">
             <!-- begin profile-content -->
-            <div class="profile-content">
+                <div class="profile-content">
+                    <h1 class="text-center">Posts by {{ user.username }} ({{ posts.total }} posts)</h1>
                <!-- begin tab-content -->
-               <div class="tab-content p-0">
+                <div class="tab-content p-0">
                   <!-- begin #profile-post tab -->
                   <div class="tab-pane fade active show" id="profile-post">
                      <!-- begin timeline -->
@@ -144,10 +113,10 @@
 
                   {% if page_num  %}
                      {% if page_num == posts.page %}
-                        <a class="btn btn-info btn-md" href="{{ url_for('all_posts', page=page_num) }}">{{ page_num }}</a>
+                        <a class="btn btn-info btn-md" href="{{ url_for('user_posts', username=user.username, page=page_num) }}">{{ page_num }}</a>
 
                      {% else %}
-                        <a class="btn btn-outline-info btn-sm" href="{{ url_for('all_posts', page=page_num) }}">{{ page_num }}</a>
+                        <a class="btn btn-outline-info btn-sm" href="{{ url_for('user_posts', username=user.username , page=page_num) }}">{{ page_num }}</a>
                      {% endif %}
                   {% else %}
                      .....

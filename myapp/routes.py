@@ -92,8 +92,12 @@ def login():
 
 
 def save_picture(form_picture):
+    # print(form_picture)     # <FileStorage: 'wallll.jpeg' ('image/jpeg')>
+    # print(type(form_picture))   # <class 'werkzeug.datastructures.FileStorage'>
+    # print(form_picture.filename)    # wallll.jpeg
+
     random_hex = secrets.token_hex(nbytes=8)
-    _, f_ext = os.path.splitext(form_picture.filename)  # os.path.splitext() splits pathname into a pair (root, extension) ex: desktop/file.py --> (desktop/file, .py)
+    _, f_ext = os.path.splitext(form_picture.filename)  # splits pathname into a pair (root, extension) ex: desktop/file.py --> (desktop/file, .py)
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
 
@@ -192,7 +196,7 @@ def all_posts():
     # return render_template('all_posts.html', title='All Post', posts=posts, image_file=show_image_in_web())
 
     page = request.args.get('page', 1, type=int)  # page number from query params, default page=1
-    per_page = 2  # Number of posts per page
+    per_page = 4  # Number of posts per page
 
     posts = db.paginate(db.select(Post).order_by(Post.date_posted.desc()), page=page, per_page=per_page, error_out=False)
     return render_template('all_posts.html', title='All Post', posts=posts, image_file=show_image_in_web())
@@ -218,6 +222,24 @@ def post_details(post_id):
     post = db.get_or_404(Post, post_id)
 
     return render_template('post.html', title=post.title, post=post)
+
+
+@app.route("/user/<string:username>")
+@login_required
+def user_posts(username):
+    user = db.first_or_404(db.select(User).where(User.username == username))
+    page = request.args.get('page', 1, type=int)
+    per_page = 2
+
+    posts = db.paginate(
+        db.select(Post).where(Post.author == user).order_by(Post.date_posted.desc()),
+        page=page,
+        per_page=per_page,
+        error_out=False
+    )
+
+    return render_template('user_posts.html', title='User Posts', user=user, posts=posts, image_file=show_image_in_web())
+
 
 
 @app.route("/post/<int:post_id>/update", methods=["GET", "POST"])
