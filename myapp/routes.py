@@ -114,22 +114,6 @@ def save_picture(form_picture):
     i.save(picture_path)
 
     return picture_fn
-   
-
-def show_image_in_web():
-    
-    image_file_path = os.path.join(app.root_path, 'static/profile_pics', current_user.image_file)
-
-    if not os.path.isfile(image_file_path):  # check if the user image file exists
-        current_user.image_file = 'default.jpg' # if image not in folder, update database to use default image
-        db.session.commit()
-
-        image_file = url_for('static', filename='profile_pics/default.jpg')
-
-    else:
-        image_file = url_for('static', filename=f'profile_pics/{current_user.image_file}')
-
-    return image_file
 
 
 @app.route("/account", methods=["GET", "POST"])
@@ -152,13 +136,14 @@ def account():
     elif request.method == 'GET':   # prefilled user details in form
         form.username.data = current_user.username
         form.email.data = current_user.email
+    image_file = url_for('static', filename=f'profile_pics/{current_user.image_file}')
 
-    return render_template('account.html', image_file=show_image_in_web(), form=form)
+    return render_template('account.html', image_file=image_file, form=form)
 
 
 @app.route('/remove_img', methods=['GET', 'POST'])
 @login_required
-def remove_image():
+def remove_profile_image():
 
     if current_user.image_file != 'default.jpg':
         
@@ -190,7 +175,6 @@ def logout():
 
 
 @app.route("/all_post")
-@login_required
 def all_posts():
     # posts = db.session.execute(db.select(Post).order_by(Post.id.desc())).scalars()
     # return render_template('all_posts.html', title='All Post', posts=posts, image_file=show_image_in_web())
@@ -199,7 +183,7 @@ def all_posts():
     per_page = 4  # Number of posts per page
 
     posts = db.paginate(db.select(Post).order_by(Post.date_posted.desc()), page=page, per_page=per_page, error_out=False)
-    return render_template('all_posts.html', title='All Post', posts=posts, image_file=show_image_in_web())
+    return render_template('all_posts.html', title='All Post', posts=posts)
 
 
 @app.route("/post/new" , methods=["GET", "POST"])
@@ -217,7 +201,6 @@ def new_post():
 
 
 @app.route("/post/<int:post_id>")
-@login_required
 def post_details(post_id):
     post = db.get_or_404(Post, post_id)
 
@@ -225,7 +208,6 @@ def post_details(post_id):
 
 
 @app.route("/user/<string:username>")
-@login_required
 def user_posts(username):
     user = db.first_or_404(db.select(User).where(User.username == username))
     page = request.args.get('page', 1, type=int)
@@ -238,7 +220,7 @@ def user_posts(username):
         error_out=False
     )
 
-    return render_template('user_posts.html', title='User Posts', user=user, posts=posts, image_file=show_image_in_web())
+    return render_template('user_posts.html', title='User Posts', user=user, posts=posts)
 
 
 
