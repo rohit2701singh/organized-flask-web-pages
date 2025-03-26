@@ -11,7 +11,12 @@
 
     {% block style %} {% endblock %}
 
-    <title>ipl home</title>
+    {% if title %}
+        <title>My App-{{ title }}</title>
+    {% else %}
+        <title>My App</title>
+    {% endif %}
+
 </head>
 
 <body>

@@ -37,7 +37,7 @@ def home():
             city_matches_list = city_df.to_dict(orient="records")
             return render_template('index.html', full_data=city_matches_list)
 
-    return render_template('index.html', full_data=match_data)
+    return render_template('index.html', full_data=match_data, title='home')
 
 
 @app.route("/registration", methods=["GET", "POST"])
@@ -60,7 +60,7 @@ def registration():
         flash(f"Account created successfully for {username}! You can now login", category="success")
         return redirect(url_for('login'))
 
-    return render_template('registration.html', form=registration_form)
+    return render_template('registration.html', form=registration_form, title='register')
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -87,7 +87,7 @@ def login():
         else:
             flash("please enter the correct details", category="danger")
 
-    return render_template('login.html', form=login_form)
+    return render_template('login.html', form=login_form, title='login')
 
 
 
@@ -138,7 +138,7 @@ def account():
         form.email.data = current_user.email
     image_file = url_for('static', filename=f'profile_pics/{current_user.image_file}')
 
-    return render_template('account.html', image_file=image_file, form=form)
+    return render_template('account.html', image_file=image_file, form=form, title='account')
 
 
 @app.route('/remove_img', methods=['GET', 'POST'])
