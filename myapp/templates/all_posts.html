@@ -62,8 +62,8 @@
                         <li>
                            <!-- begin timeline-time -->
                            <div class="timeline-time">
-                              <span class="date">{{ post.date_posted.strftime("%d-%m-%Y (UTC)") }}</span>
-                              <span class="time">{{ post.date_posted.strftime("%I:%M %p (UTC)") }}</span>
+                              <span class="date">{{ post.date_posted.strftime('%a, %d %b %Y') }}</span>
+                              <span class="time">{{ post.date_posted.strftime('%I:%M%p') }}</span> <sub> (utc+5:30)</sub>
                            </div>
                            <!-- end timeline-time -->
                            <!-- begin timeline-icon -->

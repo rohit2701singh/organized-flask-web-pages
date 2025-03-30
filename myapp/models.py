@@ -26,7 +26,7 @@ class User(db.Model, UserMixin):
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
-    date_posted = db.Column(db.DateTime, nullable=False,  default=lambda: datetime.now(timezone.utc))   #datetime.utcnow depricated
+    date_posted = db.Column(db.DateTime, nullable=False,  default=datetime.today)   # datetime likely be saved in UTC, because most servers run in UTC by default but in your machine system time will appear
     content = db.Column(db.Text, nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
