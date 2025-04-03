@@ -5,6 +5,7 @@ from myapp import app, db
 
 with app.app_context():     
     db.create_all()
+    print("database initialised")
     
 
 # After running setup_db.py once and creating the database and tables, you do not need to run it again 
