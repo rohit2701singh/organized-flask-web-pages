@@ -16,7 +16,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     image_file = db.Column(db.String, nullable=False, default='default.jpg')
-
+    role = db.Column(db.String(20), nullable=False, default="User")  # Default role is 'User'
+    
     posts = db.relationship('Post', back_populates='author', lazy=True)   # backpopulates requires defining the relationship in both models.
 
     def __repr__(self): # When you print an object of class, __repr__ defines what gets displayed.
