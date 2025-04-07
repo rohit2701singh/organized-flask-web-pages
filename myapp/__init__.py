@@ -1,6 +1,6 @@
 # Creates the Flask app instance, Loads configurations
 # Initializes extensions like SQLAlchemy & Flask-Login
-# Registers Blueprints (for modular routing)
+# Registers Blueprints (for modular routing)q
 # Always be mindful of where and how you're importing modules, otherwise you will caught in circular import and app will crash
 # flask-admin- https://gpttutorpro.com/how-to-use-flask-admin-to-create-an-admin-interface-for-your-web-application/
 
@@ -11,6 +11,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, current_user
 import os
 from dotenv import load_dotenv
+from flask_ckeditor import CKEditor
 
 load_dotenv()
 
@@ -28,6 +29,13 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 login_manager.login_message_category = "info"
+
+app.config['CKEDITOR_ENABLE_CODESNIPPET'] = True
+app.config['CKEDITOR_HEIGHT'] = 300
+app.config['CKEDITOR_PKG_TYPE'] = 'full'
+
+ckeditor = CKEditor()
+ckeditor.init_app(app)
 
 
 from flask_admin import Admin
@@ -53,8 +61,6 @@ class UserView(AdminModelView):
     column_labels = {'id': 'Id', 'username': 'Username', 'email': 'Email Address', 'password': 'Password', 'image_file': 'Image File', 'role':'Role'}
     column_filters = ('id', 'username', 'email', 'image_file', 'role')
     column_editable_list = ['username', 'email', 'image_file', 'role']
-    
-    column_formatters = dict(password=lambda v, c, m, p: m.password[:10] + '*********')
 
     # Override the on_model_change method to hash the password
     def on_model_change(self, form, model, is_created):

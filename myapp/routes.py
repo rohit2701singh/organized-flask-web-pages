@@ -8,6 +8,7 @@ from PIL import Image
 import pandas as pd
 import secrets
 import os
+import bleach
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -186,12 +187,29 @@ def all_posts():
     return render_template('all_posts.html', title='All Post', posts=posts)
 
 
+
+# bleach.clean(text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
+# If you do not provide tags and attributes to bleach.clean(), then it uses safe default values internally
+# tags not in this dict will be escaped or stripped from the text
+
+allowed_tags = {
+    'a', 'abbr', 'b', 'blockquote', 'code', 'em', 'i', 'li',
+    'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p'
+}    
+
+custom_attrs = {
+    'a': ['href', 'title'],
+    'code': ['class']
+}
+
 @app.route("/post/new" , methods=["GET", "POST"])
 @login_required
 def new_post():
     form = PostForm()
-    if form.validate_on_submit():
-        post = Post(title=form.title.data, content=form.content.data, author=current_user)
+    if form.validate_on_submit():   # sanitize HTML input from user before saving it to the database 
+        content_data = bleach.clean(form.content.data, tags=allowed_tags, attributes=custom_attrs) 
+
+        post = Post(title=form.title.data, content=content_data, author=current_user)
         db.session.add(post)
         db.session.commit()
 
@@ -235,7 +253,7 @@ def update_post(post_id):
     form = PostForm()
     if form.validate_on_submit():
         post.title = form.title.data
-        post.content = form.content.data
+        post.content = bleach.clean(form.content.data, tags=allowed_tags, attributes=custom_attrs)
         db.session.commit()
         flash(message="Your post has been updated!", category='success')
         return redirect(url_for('post_details', post_id=post.id))

@@ -5,6 +5,7 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextA
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from myapp.models import User
 from myapp import db
+from flask_ckeditor import CKEditorField
 
 
 def no_leading_trailing_spaces(form, field):    # (form, field) automatically passed by WTForms
@@ -66,6 +67,6 @@ class UpdateAccountForm(FlaskForm):
 
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
-    content = TextAreaField('Content', validators=[DataRequired()])
+    content = CKEditorField('Content', validators=[DataRequired()])
     submit = SubmitField('Post')
     

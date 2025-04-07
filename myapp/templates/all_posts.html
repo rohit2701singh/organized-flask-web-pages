@@ -95,7 +95,7 @@
                                  <h5 class="mb-2">
                                     <a href="{{ url_for('post_details', post_id=post.id) }}">{{ post.title }}</a>
                                  </h5>
-                                 <p>{{ post.content }}</p>
+                                 <p>{{ post.content | safe }}</p>
                               </div>
                               <div class="timeline-likes">
                                  <div class="stats-right">
